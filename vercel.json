@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "regions": ["fra1"],
+  "env": {
+    "RAPIDAPI_KEY": "@rapidapi_key",
+    "RAPIDAPI_HOST": "@rapidapi_host"
+  },
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next"
+}

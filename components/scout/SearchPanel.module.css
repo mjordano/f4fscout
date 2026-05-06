@@ -1,0 +1,174 @@
+.panel {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Mode tabs */
+.modes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.modeBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.03);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--trans-fast);
+  font-family: var(--font-ui);
+}
+.modeBtn:hover {
+  background: rgba(255,255,255,0.07);
+  color: var(--text-primary);
+}
+.modeActive {
+  background: rgba(168,85,247,0.12) !important;
+  border-color: rgba(168,85,247,0.35) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 0 20px rgba(168,85,247,0.1);
+}
+.modeIcon { font-size: 20px; }
+.modeLabel { font-size: 12px; font-weight: 600; text-align: center; }
+
+.modeDesc {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: -8px;
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Input with prefix */
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.inputPrefix {
+  position: absolute;
+  left: 14px;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 16px;
+  z-index: 1;
+  pointer-events: none;
+}
+.input {
+  padding-left: 32px !important;
+}
+
+/* Multi-account */
+.multiWrap { display: flex; flex-direction: column; gap: 10px; }
+.tagsRow   { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: rgba(168,85,247,0.12);
+  border: 1px solid rgba(168,85,247,0.25);
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  color: #c084fc;
+}
+.tagRemove {
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  color: #c084fc;
+  opacity: 0.7;
+  padding: 0;
+  background: none;
+  border: none;
+}
+.tagRemove:hover { opacity: 1; }
+.addBtn {
+  position: absolute;
+  right: 8px;
+  padding: 4px 12px;
+  background: rgba(168,85,247,0.2);
+  border: 1px solid rgba(168,85,247,0.3);
+  border-radius: var(--radius-full);
+  color: #c084fc;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--trans-fast);
+}
+.addBtn:hover { background: rgba(168,85,247,0.3); }
+
+/* Niche / Hashtag suggestions */
+.nicheWrap, .hashtagWrap { display: flex; flex-direction: column; gap: 12px; }
+.suggestions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.suggestLabel { font-size: 12px; color: var(--text-muted); margin-right: 2px; }
+.suggestChip {
+  padding: 3px 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--trans-fast);
+}
+.suggestChip:hover { color: var(--text-primary); border-color: rgba(168,85,247,0.3); }
+.suggestActive {
+  background: rgba(168,85,247,0.15) !important;
+  border-color: rgba(168,85,247,0.4) !important;
+  color: #c084fc !important;
+}
+
+/* Count */
+.countRow { display: flex; flex-direction: column; gap: 8px; }
+.countLabel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.countVal {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--accent-purple);
+}
+.countHints {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Submit */
+.submitBtn {
+  width: 100%;
+  justify-content: center;
+  font-size: 16px;
+}
+.submitBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+@media (max-width: 480px) {
+  .modes { grid-template-columns: repeat(2, 1fr); }
+  .panel { padding: 20px; }
+}

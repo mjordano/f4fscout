@@ -1,0 +1,102 @@
+.page { padding: 40px 0 80px; }
+.inner { display: flex; flex-direction: column; gap: 24px; }
+
+.header { display: flex; flex-direction: column; gap: 8px; }
+.title  { font-size: 32px; font-weight: 800; }
+.sub    { color: var(--text-secondary); font-size: 16px; }
+
+/* Load card */
+.loadCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 64px;
+  background: rgba(255,255,255,0.03);
+  border: 1px dashed rgba(255,255,255,0.1);
+  border-radius: var(--radius-xl);
+  text-align: center;
+  color: var(--text-secondary);
+}
+.loadIcon { font-size: 56px; }
+.loadCard h3 { font-size: 20px; font-weight: 700; color: var(--text-primary); }
+.loadCard p  { font-size: 15px; }
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Stat cards */
+.statCards {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+}
+.statCard {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg);
+  padding: 20px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all var(--trans-fast);
+}
+.statCard:hover { background: rgba(255,255,255,0.07); transform: translateY(-2px); }
+.statIcon   { font-size: 24px; flex-shrink: 0; }
+.statVal    { font-family: var(--font-display); font-size: 22px; font-weight: 800; }
+.statLabel  { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* Chart card */
+.chartCard {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.chartTitle { font-size: 17px; font-weight: 700; }
+.chartSub   { font-size: 13px; color: var(--text-muted); margin-top: -6px; }
+
+/* Canvas */
+.canvas { width: 100%; border-radius: var(--radius-md); }
+
+/* Score bar */
+.scoreBar { display: flex; align-items: center; gap: 10px; flex: 1; }
+.scoreBarLabel { font-size: 12px; color: var(--text-muted); width: 40px; flex-shrink: 0; }
+.scoreBarTrack { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+.scoreBarFill  { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+.scoreBarVal   { font-size: 12px; font-weight: 700; width: 28px; text-align: right; flex-shrink: 0; }
+
+/* Ratio chart */
+.ratioChart { display: flex; flex-direction: column; gap: 10px; }
+.ratioRow   { display: flex; align-items: center; gap: 12px; }
+.ratioLabel { font-size: 13px; color: var(--text-secondary); width: 48px; flex-shrink: 0; font-family: var(--font-display); font-weight: 600; }
+.ratioBar   { flex: 1; height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+.ratioFill  { height: 100%; border-radius: 4px; transition: width 1s ease; }
+.ratioCount { font-size: 13px; color: var(--text-secondary); width: 28px; text-align: right; flex-shrink: 0; }
+
+/* Top 10 */
+.top10     { display: flex; flex-direction: column; gap: 8px; }
+.top10Row  { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: rgba(255,255,255,0.03); border-radius: var(--radius-md); }
+.rank      { font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--text-muted); width: 28px; flex-shrink: 0; }
+.topUsername { font-size: 14px; font-weight: 600; color: #c084fc; min-width: 140px; text-decoration: none; }
+.topUsername:hover { text-decoration: underline; }
+.topRatio  { font-size: 13px; font-weight: 700; min-width: 48px; flex-shrink: 0; }
+.topFollowers { font-size: 12px; color: var(--text-muted); flex-shrink: 0; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .statCards { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .grid { grid-template-columns: 1fr; }
+  .statCards { grid-template-columns: repeat(2, 1fr); }
+  .top10Row { flex-wrap: wrap; }
+}
