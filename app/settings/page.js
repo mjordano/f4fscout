@@ -28,6 +28,14 @@ const RAPIDAPI_OPTIONS = [
     freeTier: '50 req/mo',
     recommended: false,
   },
+  {
+    name: 'Instagram Looter2',
+    host: 'instagram-looter2.p.rapidapi.com',
+    docs: 'https://rapidapi.com/irrors-apis/api/instagram-looter2',
+    features: ['Profile Info', 'Followers', 'Following', 'Hashtags'],
+    freeTier: 'Check Docs',
+    recommended: false,
+  },
 ];
 
 export default function SettingsPage() {
