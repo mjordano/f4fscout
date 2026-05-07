@@ -5,27 +5,27 @@ import styles from './page.module.css';
 
 const RAPIDAPI_OPTIONS = [
   {
-    name: 'Instagram Scraper API2',
-    host: 'instagram-scraper-api2.p.rapidapi.com',
-    docs: 'https://rapidapi.com/datascraper/api/instagram-scraper-api2',
-    features: ['Followers', 'Following', 'Profile Info', 'Hashtag Search'],
+    name: 'Instagram Scraper by RocketAPI',
+    host: 'rocketapi-for-instagram.p.rapidapi.com',
+    docs: 'https://rapidapi.com/rocketapi/api/rocketapi-for-instagram',
+    features: ['Followers', 'Following', 'Profile Info', 'Hashtag Search', 'High Reliability'],
     freeTier: '100 req/mo',
     recommended: true,
   },
   {
-    name: 'Instagram API by Jenil',
-    host: 'instagram130.p.rapidapi.com',
-    docs: 'https://rapidapi.com/Jenil999/api/instagram130',
-    features: ['Profile Info', 'Followers', 'Following'],
-    freeTier: '50 req/mo',
-    recommended: false,
-  },
-  {
-    name: 'Instagram Bulk Profile Scraper',
+    name: 'Instagram Bulk Data Extractor',
     host: 'instagram-bulk-profile-scrapper.p.rapidapi.com',
     docs: 'https://rapidapi.com/hazkarami/api/instagram-bulk-profile-scrapper',
     features: ['Bulk profiles', 'Following list', 'Followers list'],
     freeTier: '100 req/mo',
+    recommended: false,
+  },
+  {
+    name: 'Instagram Looper API',
+    host: 'instagram-looper.p.rapidapi.com',
+    docs: 'https://rapidapi.com/Data-Looper/api/instagram-looper',
+    features: ['Profile Info', 'Followers', 'Following', 'Fast Response'],
+    freeTier: '50 req/mo',
     recommended: false,
   },
 ];
