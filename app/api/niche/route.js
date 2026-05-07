@@ -10,7 +10,11 @@ export async function POST(request) {
     const { keyword, count = 80 } = await request.json();
     if (!keyword) return NextResponse.json({ error: 'Missing keyword' }, { status: 400 });
 
-    const profiles = await searchByNiche(keyword, count);
+    const apiKey = request.headers.get('x-client-api-key') || '';
+    const apiHost = request.headers.get('x-client-api-host') || '';
+    const opts = { apiKey, apiHost };
+
+    const profiles = await searchByNiche(keyword, count, opts);
     const scored   = scoreProfiles(profiles);
 
     return NextResponse.json({
@@ -18,7 +22,7 @@ export async function POST(request) {
       profiles: scored,
       total: scored.length,
       keyword,
-      isDemo: !process.env.RAPIDAPI_KEY,
+      isDemo: !(opts.apiKey || process.env.RAPIDAPI_KEY),
     });
   } catch (err) {
     console.error('[niche]', err);

@@ -10,6 +10,10 @@ export async function POST(request) {
     const body = await request.json();
     const { mode, usernames, username, count = 80 } = body;
 
+    const apiKey = request.headers.get('x-client-api-key') || '';
+    const apiHost = request.headers.get('x-client-api-host') || '';
+    const opts = { apiKey, apiHost };
+
     if (!mode) {
       return NextResponse.json({ error: 'Missing mode' }, { status: 400 });
     }
@@ -21,9 +25,9 @@ export async function POST(request) {
       if (!username) return NextResponse.json({ error: 'Missing username' }, { status: 400 });
 
       const [profileData, followers, following] = await Promise.allSettled([
-        getProfile(username),
-        getFollowers(username, count),
-        getFollowing(username, Math.floor(count / 2)),
+        getProfile(username, opts),
+        getFollowers(username, count, opts),
+        getFollowing(username, Math.floor(count / 2), opts),
       ]);
 
       if (profileData.status === 'fulfilled') sourceProfile = profileData.value;
@@ -42,7 +46,7 @@ export async function POST(request) {
         return NextResponse.json({ error: 'Missing usernames array' }, { status: 400 });
       }
       const results = await Promise.allSettled(
-        usernames.slice(0, 5).map(u => getFollowers(u, Math.ceil(count / usernames.length)))
+        usernames.slice(0, 5).map(u => getFollowers(u, Math.ceil(count / usernames.length), opts))
       );
       const all = results.flatMap(r => r.status === 'fulfilled' ? r.value : []);
       const seen = new Set();
@@ -60,7 +64,7 @@ export async function POST(request) {
       profiles: scored,
       total: scored.length,
       sourceProfile,
-      isDemo: !process.env.RAPIDAPI_KEY,
+      isDemo: !(opts.apiKey || process.env.RAPIDAPI_KEY),
     });
   } catch (err) {
     console.error('[scout]', err);

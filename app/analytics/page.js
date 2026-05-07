@@ -123,9 +123,16 @@ export default function AnalyticsPage() {
   const loadDemo = async () => {
     setLoading(true);
     try {
+      const apiKey = localStorage.getItem('f4f_rapidapi_key') || '';
+      const apiHost = localStorage.getItem('f4f_rapidapi_host') || '';
+
       const res  = await fetch('/api/niche', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-client-api-key': apiKey,
+          'x-client-api-host': apiHost
+        },
         body: JSON.stringify({ keyword: 'cats', count: 100 }),
       });
       const data = await res.json();

@@ -8,6 +8,7 @@ const MODES = [
   { id: 'multi',    label: 'Multi-Account', icon: '👥', desc: 'Analyze audience overlap across accounts' },
   { id: 'niche',    label: 'By Niche',      icon: '🎨', desc: 'Find profiles in a topic or niche' },
   { id: 'hashtag',  label: 'By Hashtag',    icon: '#',  desc: 'Discover users posting with a hashtag' },
+  { id: 'location', label: 'By Location',   icon: '📍', desc: 'Find profiles in a specific country/city' },
 ];
 
 const POPULAR_NICHES = ['cats','photography','fitness','food','travel','fashion','art','nature','dogs','gaming'];
@@ -20,6 +21,7 @@ export default function SearchPanel({ onSearch, loading }) {
   const [usernameInput, setUsernameInput] = useState('');
   const [niche, setNiche]       = useState('');
   const [hashtag, setHashtag]   = useState('');
+  const [location, setLocation] = useState('');
   const [count, setCount]       = useState(80);
 
   const handleSubmit = (e) => {
@@ -40,6 +42,10 @@ export default function SearchPanel({ onSearch, loading }) {
     } else if (mode === 'hashtag') {
       if (!hashtag.trim()) return;
       payload.hashtag = hashtag.trim().replace('#', '');
+    } else if (mode === 'location') {
+      if (!location.trim()) return;
+      payload.mode = 'niche'; // Under the hood, we use the niche endpoint (search_users) for location
+      payload.keyword = location.trim();
     }
 
     onSearch(payload);
@@ -63,7 +69,8 @@ export default function SearchPanel({ onSearch, loading }) {
     (mode === 'account'  && username.trim()) ||
     (mode === 'multi'    && usernames.length > 0) ||
     (mode === 'niche'    && niche.trim()) ||
-    (mode === 'hashtag'  && hashtag.trim())
+    (mode === 'hashtag'  && hashtag.trim()) ||
+    (mode === 'location' && location.trim())
   );
 
   return (
@@ -182,6 +189,21 @@ export default function SearchPanel({ onSearch, loading }) {
                 </button>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Location mode */}
+        {mode === 'location' && (
+          <div className={styles.inputWrap}>
+            <span className={styles.inputPrefix}>📍</span>
+            <input
+              className={`input ${styles.input}`}
+              type="text"
+              placeholder="e.g. London, Serbia, New York..."
+              value={location}
+              onChange={e => setLocation(e.target.value)}
+              autoFocus
+            />
           </div>
         )}
 

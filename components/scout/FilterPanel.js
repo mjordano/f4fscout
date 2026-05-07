@@ -147,6 +147,18 @@ export default function FilterPanel({ filters, onChange, profileCount }) {
             />
           </div>
 
+          {/* Country / Location */}
+          <div className={styles.group}>
+            <label className={styles.label}>Country / Location</label>
+            <input
+              className="input"
+              type="text"
+              placeholder="e.g. USA, London, Serbia"
+              value={filters.country}
+              onChange={e => set('country', e.target.value)}
+            />
+          </div>
+
           {/* Toggles */}
           <div className={styles.group}>
             <div className={styles.toggleRow}>

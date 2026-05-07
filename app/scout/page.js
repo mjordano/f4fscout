@@ -52,9 +52,16 @@ function ScoutPageInner() {
                    : '/api/scout';
 
     try {
+      const apiKey = localStorage.getItem('f4f_rapidapi_key') || '';
+      const apiHost = localStorage.getItem('f4f_rapidapi_host') || '';
+
       const res  = await fetch(endpoint, {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-client-api-key': apiKey,
+          'x-client-api-host': apiHost
+        },
         body:    JSON.stringify(payload),
       });
       const data = await res.json();
