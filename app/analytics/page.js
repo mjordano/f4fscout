@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { scoreHex, formatNumber, formatRatio } from '@/lib/utils';
+import { scoreHex, formatNumber, formatRatio, getClientAuthHeaders } from '@/lib/utils';
 import styles from './page.module.css';
 
 function ScoreBar({ label, value, color, max = 100 }) {
@@ -123,15 +123,13 @@ export default function AnalyticsPage() {
   const loadDemo = async () => {
     setLoading(true);
     try {
-      const apiKey = localStorage.getItem('f4f_rapidapi_key') || '';
-      const apiHost = localStorage.getItem('f4f_rapidapi_host') || '';
+      const authHeaders = getClientAuthHeaders();
 
       const res  = await fetch('/api/niche', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'x-client-api-key': apiKey,
-          'x-client-api-host': apiHost
+          ...authHeaders,
         },
         body: JSON.stringify({ keyword: 'cats', count: 100 }),
       });

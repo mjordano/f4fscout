@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { searchByHashtag } from '@/lib/instagram';
+import { searchByHashtag, extractAuthHeaders } from '@/lib/instagram';
 import { scoreProfiles } from '@/lib/scoring';
 
 export const runtime = 'nodejs';
@@ -10,10 +10,7 @@ export async function POST(request) {
     const { hashtag, count = 60 } = await request.json();
     if (!hashtag) return NextResponse.json({ error: 'Missing hashtag' }, { status: 400 });
 
-    const apiKey = request.headers.get('x-client-api-key') || '';
-    const apiHost = request.headers.get('x-client-api-host') || '';
-    const opts = { apiKey, apiHost };
-
+    const opts = extractAuthHeaders(request);
     const profiles = await searchByHashtag(hashtag, count, opts);
     const scored   = scoreProfiles(profiles);
 
@@ -22,7 +19,7 @@ export async function POST(request) {
       profiles: scored,
       total: scored.length,
       hashtag,
-      isDemo: !(opts.apiKey || process.env.RAPIDAPI_KEY),
+      isDemo: !(opts.apifyToken || opts.apiKey || process.env.APIFY_TOKEN || process.env.RAPIDAPI_KEY),
     });
   } catch (err) {
     console.error('[hashtag]', err);

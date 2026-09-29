@@ -7,7 +7,7 @@ import FilterPanel  from '@/components/scout/FilterPanel';
 import SortBar      from '@/components/scout/SortBar';
 import ProfileCard  from '@/components/scout/ProfileCard';
 import { DEFAULT_FILTERS, applyFilters, applySort } from '@/lib/filters';
-import { toCSV, downloadFile, pluralize } from '@/lib/utils';
+import { toCSV, downloadFile, pluralize, getClientAuthHeaders } from '@/lib/utils';
 import styles from './page.module.css';
 
 function ScoutPageInner() {
@@ -52,15 +52,13 @@ function ScoutPageInner() {
                    : '/api/scout';
 
     try {
-      const apiKey = localStorage.getItem('f4f_rapidapi_key') || '';
-      const apiHost = localStorage.getItem('f4f_rapidapi_host') || '';
+      const authHeaders = getClientAuthHeaders();
 
       const res  = await fetch(endpoint, {
         method:  'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'x-client-api-key': apiKey,
-          'x-client-api-host': apiHost
+          ...authHeaders,
         },
         body:    JSON.stringify(payload),
       });

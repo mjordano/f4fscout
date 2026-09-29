@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getFollowers, getFollowing, getProfile } from '@/lib/instagram';
+import { getFollowers, getFollowing, getProfile, extractAuthHeaders } from '@/lib/instagram';
 import { scoreProfiles } from '@/lib/scoring';
 
 export const runtime = 'nodejs';
@@ -9,10 +9,7 @@ export async function POST(request) {
   try {
     const body = await request.json();
     const { mode, usernames, username, count = 80 } = body;
-
-    const apiKey = request.headers.get('x-client-api-key') || '';
-    const apiHost = request.headers.get('x-client-api-host') || '';
-    const opts = { apiKey, apiHost };
+    const opts = extractAuthHeaders(request);
 
     if (!mode) {
       return NextResponse.json({ error: 'Missing mode' }, { status: 400 });
@@ -34,8 +31,8 @@ export async function POST(request) {
 
       // Combine followers + following, deduplicate
       const all = [
-        ...(followers.status === 'fulfilled'  ? followers.value  : []),
-        ...(following.status === 'fulfilled'  ? following.value  : []),
+        ...(followers.status === 'fulfilled'  ? (followers.value || [])  : []),
+        ...(following.status === 'fulfilled'  ? (following.value || [])  : []),
       ];
       const seen = new Set();
       profiles = all.filter(p => p && !seen.has(p.username) && seen.add(p.username));
@@ -48,7 +45,7 @@ export async function POST(request) {
       const results = await Promise.allSettled(
         usernames.slice(0, 5).map(u => getFollowers(u, Math.ceil(count / usernames.length), opts))
       );
-      const all = results.flatMap(r => r.status === 'fulfilled' ? r.value : []);
+      const all = results.flatMap(r => r.status === 'fulfilled' ? (r.value || []) : []);
       const seen = new Set();
       profiles = all.filter(p => p && !seen.has(p.username) && seen.add(p.username));
     }
@@ -64,7 +61,7 @@ export async function POST(request) {
       profiles: scored,
       total: scored.length,
       sourceProfile,
-      isDemo: !(opts.apiKey || process.env.RAPIDAPI_KEY),
+      isDemo: !(opts.apifyToken || opts.apiKey || process.env.APIFY_TOKEN || process.env.RAPIDAPI_KEY),
     });
   } catch (err) {
     console.error('[scout]', err);

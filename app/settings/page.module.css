@@ -21,6 +21,40 @@
 .noticeBox p { color: rgba(251,191,36,0.75); }
 .noticeIcon { font-size: 28px; flex-shrink: 0; }
 
+/* Provider Tabs */
+.providerTabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.tabBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.tabBtn:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.15);
+  color: var(--text-primary);
+}
+.tabBtnActive {
+  background: rgba(168,85,247,0.12) !important;
+  border-color: rgba(168,85,247,0.4) !important;
+  color: #fff !important;
+  box-shadow: 0 0 15px rgba(168,85,247,0.15);
+}
+
 /* Card */
 .card {
   background: rgba(255,255,255,0.04);
@@ -33,7 +67,7 @@
 }
 .cardTitle { font-size: 18px; font-weight: 700; }
 .cardDesc  { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
-.cardDesc a { color: #c084fc; }
+.cardDesc a { color: #c084fc; text-decoration: underline; }
 .cardDesc code { background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 4px; font-size: 13px; }
 
 /* Field */
@@ -41,7 +75,7 @@
 .label { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
 
 /* Actions */
-.actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
 
 /* Test result */
 .successBox {
