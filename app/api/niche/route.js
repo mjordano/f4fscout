@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { searchByNiche, extractAuthHeaders } from '@/lib/instagram';
+import { searchByNiche, enrichProfilesWithDetails, extractAuthHeaders } from '@/lib/instagram';
 import { scoreProfiles } from '@/lib/scoring';
 
 export const runtime = 'nodejs';
@@ -11,8 +11,9 @@ export async function POST(request) {
     if (!keyword) return NextResponse.json({ error: 'Missing keyword' }, { status: 400 });
 
     const opts = extractAuthHeaders(request);
-    const profiles = await searchByNiche(keyword, count, opts);
-    const scored   = scoreProfiles(profiles);
+    const rawProfiles = await searchByNiche(keyword, count, opts);
+    const enriched    = await enrichProfilesWithDetails(rawProfiles, opts, Math.min(count, 40));
+    const scored      = scoreProfiles(enriched);
 
     return NextResponse.json({
       success: true,

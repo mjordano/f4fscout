@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { searchByHashtag, extractAuthHeaders } from '@/lib/instagram';
+import { searchByHashtag, enrichProfilesWithDetails, extractAuthHeaders } from '@/lib/instagram';
 import { scoreProfiles } from '@/lib/scoring';
 
 export const runtime = 'nodejs';
@@ -11,8 +11,9 @@ export async function POST(request) {
     if (!hashtag) return NextResponse.json({ error: 'Missing hashtag' }, { status: 400 });
 
     const opts = extractAuthHeaders(request);
-    const profiles = await searchByHashtag(hashtag, count, opts);
-    const scored   = scoreProfiles(profiles);
+    const rawProfiles = await searchByHashtag(hashtag, count, opts);
+    const enriched    = await enrichProfilesWithDetails(rawProfiles, opts, Math.min(count, 40));
+    const scored      = scoreProfiles(enriched);
 
     return NextResponse.json({
       success: true,

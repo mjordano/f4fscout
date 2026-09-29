@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getFollowers, getFollowing, getProfile, extractAuthHeaders } from '@/lib/instagram';
+import { getFollowers, getFollowing, getProfile, enrichProfilesWithDetails, extractAuthHeaders } from '@/lib/instagram';
 import { scoreProfiles } from '@/lib/scoring';
 
 export const runtime = 'nodejs';
@@ -54,7 +54,9 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Unknown mode' }, { status: 400 });
     }
 
-    const scored = scoreProfiles(profiles);
+    // Enrich profiles with full metrics (followers, following, posts, bio, engagement)
+    const enriched = await enrichProfilesWithDetails(profiles, opts, Math.min(count, 40));
+    const scored = scoreProfiles(enriched);
 
     return NextResponse.json({
       success: true,
