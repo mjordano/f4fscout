@@ -5,11 +5,11 @@ import styles from './page.module.css';
 
 const RAPIDAPI_OPTIONS = [
   {
-    name: 'Instagram Scraper by RocketAPI',
-    host: 'rocketapi-for-instagram.p.rapidapi.com',
-    docs: 'https://rapidapi.com/rocketapi/api/rocketapi-for-instagram',
-    features: ['Followers', 'Following', 'Profile Info', 'Hashtag Search', 'High Reliability'],
-    freeTier: '100 req/mo',
+    name: 'Instagram Scraper API (social-api1-instagram)',
+    host: 'instagram-scraper-api2.p.rapidapi.com',
+    docs: 'https://rapidapi.com/social-api1-instagram/api/instagram-scraper-api2',
+    features: ['Followers List', 'Following List', 'Profile Info', 'Hashtags', 'Search Users'],
+    freeTier: 'Basic tier available',
     recommended: true,
   },
   {
@@ -36,23 +36,65 @@ const RAPIDAPI_OPTIONS = [
     freeTier: 'Check Docs',
     recommended: false,
   },
+  {
+    name: 'Instagram Scraper by RocketAPI (Deprecated)',
+    host: 'rocketapi-for-instagram.p.rapidapi.com',
+    docs: 'https://rapidapi.com/rocketapi/api/rocketapi-for-instagram',
+    features: ['Followers', 'Following', 'Profile Info', 'Hashtag Search', 'High Reliability'],
+    freeTier: 'Inactive on RapidAPI',
+    recommended: false,
+    deprecated: true,
+  },
+  {
+    name: 'Custom Host...',
+    host: 'custom',
+    docs: 'https://rapidapi.com',
+    features: ['Use any standard RapidAPI host'],
+    freeTier: 'Depends on host',
+    recommended: false,
+  }
 ];
 
 export default function SettingsPage() {
   const [apiKey,  setApiKey]  = useState('');
   const [apiHost, setApiHost] = useState(RAPIDAPI_OPTIONS[0].host);
+  const [customHost, setCustomHost] = useState('');
+  const [isCustom, setIsCustom] = useState(false);
   const [saved,   setSaved]   = useState(false);
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState(null);
 
   useEffect(() => {
-    setApiKey(localStorage.getItem('f4f_rapidapi_key')  || '');
-    setApiHost(localStorage.getItem('f4f_rapidapi_host') || RAPIDAPI_OPTIONS[0].host);
+    const savedKey = localStorage.getItem('f4f_rapidapi_key') || '';
+    const savedHost = localStorage.getItem('f4f_rapidapi_host') || RAPIDAPI_OPTIONS[0].host;
+    setApiKey(savedKey);
+
+    const match = RAPIDAPI_OPTIONS.find(o => o.host === savedHost);
+    if (match && savedHost !== 'custom') {
+      setApiHost(savedHost);
+      setIsCustom(false);
+    } else if (savedHost) {
+      setApiHost('custom');
+      setCustomHost(savedHost);
+      setIsCustom(true);
+    }
   }, []);
 
+  const handleHostChange = (e) => {
+    const val = e.target.value;
+    setApiHost(val);
+    if (val === 'custom') {
+      setIsCustom(true);
+    } else {
+      setIsCustom(false);
+      setCustomHost('');
+    }
+  };
+
   const handleSave = () => {
+    const finalHost = isCustom ? customHost.trim() : apiHost;
     localStorage.setItem('f4f_rapidapi_key',  apiKey.trim());
-    localStorage.setItem('f4f_rapidapi_host', apiHost);
+    localStorage.setItem('f4f_rapidapi_host', finalHost);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
@@ -61,26 +103,35 @@ export default function SettingsPage() {
     localStorage.removeItem('f4f_rapidapi_key');
     localStorage.removeItem('f4f_rapidapi_host');
     setApiKey('');
+    setCustomHost('');
+    setIsCustom(false);
+    setApiHost(RAPIDAPI_OPTIONS[0].host);
     setTestResult(null);
   };
 
   const handleTest = async () => {
     setTesting(true);
     setTestResult(null);
+    const finalHost = isCustom ? customHost.trim() : apiHost;
     try {
-      const res = await fetch('/api/scout', {
+      const res = await fetch('/api/test-connection', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-client-api-key': apiKey, 'x-client-api-host': apiHost },
-        body: JSON.stringify({ mode: 'account', username: 'instagram', count: 5 }),
+        headers: { 
+          'Content-Type': 'application/json', 
+          'x-client-api-key': apiKey.trim(), 
+          'x-client-api-host': finalHost 
+        }
       });
       const data = await res.json();
-      if (data.isDemo) {
+      if (!res.ok) {
+        setTestResult({ ok: false, msg: `✕ Connection failed: ${data.error || 'Check details.'}` });
+      } else if (data.isDemo) {
         setTestResult({ ok: false, msg: 'Server is still using demo mode. Add RAPIDAPI_KEY to .env.local and restart.' });
       } else {
-        setTestResult({ ok: true, msg: `✓ Connected! Got ${data.total} profiles from real API.` });
+        setTestResult({ ok: true, msg: `✓ Connected! Successfully verified profile data for "${data.profile.displayName}" via real API.` });
       }
     } catch (e) {
-      setTestResult({ ok: false, msg: e.message });
+      setTestResult({ ok: false, msg: `✕ Error: ${e.message}` });
     }
     setTesting(false);
   };
@@ -125,12 +176,28 @@ export default function SettingsPage() {
 
           <div className={styles.field}>
             <label className={styles.label}>API Host (provider)</label>
-            <select className="select" value={apiHost} onChange={e => setApiHost(e.target.value)}>
+            <select className="select" value={apiHost} onChange={handleHostChange}>
               {RAPIDAPI_OPTIONS.map(o => (
-                <option key={o.host} value={o.host}>{o.name}</option>
+                <option key={o.host} value={o.host}>
+                  {o.name} {o.deprecated ? ' (deprecated)' : ''}
+                </option>
               ))}
             </select>
           </div>
+
+          {isCustom && (
+            <div className={styles.field}>
+              <label className={styles.label}>Custom API Host</label>
+              <input
+                className="input"
+                type="text"
+                placeholder="e.g. instagram-scraper-api2.p.rapidapi.com"
+                value={customHost}
+                onChange={e => setCustomHost(e.target.value)}
+                autoComplete="off"
+              />
+            </div>
+          )}
 
           <div className={styles.actions}>
             <button className="btn btn-primary" onClick={handleSave}>
@@ -164,7 +231,7 @@ export default function SettingsPage() {
         <div className={styles.card}>
           <h2 className={styles.cardTitle}>📋 Recommended API Providers</h2>
           <div className={styles.providerGrid}>
-            {RAPIDAPI_OPTIONS.map(o => (
+            {RAPIDAPI_OPTIONS.filter(o => o.host !== 'custom' && !o.deprecated).map(o => (
               <div key={o.host} className={`${styles.providerCard} ${o.recommended ? styles.providerRecommended : ''}`}>
                 {o.recommended && <span className={styles.recBadge}>⭐ Recommended</span>}
                 <h3 className={styles.providerName}>{o.name}</h3>
